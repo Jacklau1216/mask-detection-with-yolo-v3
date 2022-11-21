@@ -4,19 +4,21 @@ import cv2 as cv
 import numpy as np
 import time
 
-img = cv.imread('') #! plz put an image here
-cv.imshow('window',  img)
-cv.waitKey(0)
+img = cv.imread('img/1.png') #! plz put an image here
+# cv.imshow('window',  img)
+# cv.waitKey(0)
 
 
 
 # Load names of classes and get random colors
-classes = ['without mask','with mask']
+classes = ['with mask','without mask','improper']
 np.random.seed(42)
 colors = np.random.randint(0, 255, size=(len(classes), 3), dtype='uint8')
 
 # Give the configuration and weight files for the model and load the network.
-net = cv.dnn.readNetFromDarknet('yolov3_testing.cfg', 'yolov3_testing_last.weights')
+net = cv.dnn.readNetFromDarknet('yolov3_custom.cfg', 'model/v2.weights')
+# net = cv.dnn.readNetFromDarknet('yolov3_custom.cfg', 'model/yolov3_custom_last.weights')
+# net = cv.dnn.readNetFromDarknet('yolov3_custom.cfg', 'model/yolov3_testing_last.weights')
 net.setPreferableBackend(cv.dnn.DNN_BACKEND_OPENCV)
 # net.setPreferableTarget(cv.dnn.DNN_TARGET_CPU)
 
@@ -76,7 +78,7 @@ for output in outputs:
         scores = detection[5:]
         classID = np.argmax(scores)
         confidence = scores[classID]
-        if confidence > 0.5:
+        if confidence > 0.7:
             box = detection[:4] * np.array([w, h, w, h])
             (centerX, centerY, width, height) = box.astype("int")
             x = int(centerX - (width / 2))

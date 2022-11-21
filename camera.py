@@ -11,12 +11,12 @@ import time
 
 
 # Load names of classes and get random colors
-classes = ['without mask','with mask']
+classes = ['with mask','without mask','improper']
 np.random.seed(42)
 colors = np.random.randint(0, 255, size=(len(classes), 3), dtype='uint8')
 
 # Give the configuration and weight files for the model and load the network.
-net = cv.dnn.readNetFromDarknet('yolov3_testing.cfg', 'yolov3_testing_last.weights')
+net = cv.dnn.readNetFromDarknet('yolov3_custom.cfg', 'model/v2.weights')
 net.setPreferableBackend(cv.dnn.DNN_BACKEND_OPENCV)
 # net.setPreferableTarget(cv.dnn.DNN_TARGET_CPU)
 
@@ -78,7 +78,7 @@ while 1:
             scores = detection[5:]
             classID = np.argmax(scores)
             confidence = scores[classID]
-            if confidence > 0.5:
+            if confidence > 0.4:
                 box = detection[:4] * np.array([w, h, w, h])
                 (centerX, centerY, width, height) = box.astype("int")
                 x = int(centerX - (width / 2))
